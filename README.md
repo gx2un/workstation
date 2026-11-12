@@ -476,7 +476,7 @@ $ git log --oneline
 e65c675 (HEAD -> main) Initial commit: terminal, docker practice files
 ```
 - 이후 VSCode Source Control의 **Publish Branch**로 GitHub public 저장소(`gx2un/workstation`)에 업로드했다.
-- 첫 커밋에 개인 이메일이 기록되어 있어 작성자 정보를 수정했다. (트러블슈팅 6 참고)
+- 첫 커밋에 개인 이메일이 기록되어 있어 작성자 정보를 수정했다.
 ```bash
 $ git commit --amend --reset-author --no-edit
 $ git log --format="%h %an %ae"

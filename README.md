@@ -531,8 +531,7 @@ curl http://localhost:8080
   ```powershell
   wsl --install --web-download
   wsl --install -d Ubuntu --web-download
-  ```
-- 📷 [403 에러](images/ts-01-wsl-403.png) · [web-download 성공](images/ts-01-wsl-fixed.png)
+  ```)
 
 ### 2) Ubuntu에서 `code .` 실행 시 `command not found`
 - **문제:** VSCode 설치 후 Ubuntu에서 `code .` 입력 시 `Command 'code' not found` 출력
@@ -540,13 +539,13 @@ curl http://localhost:8080
 - **확인:** VSCode 설치 시 PATH 추가 옵션은 기본 체크 상태였음
 - **해결:** Ubuntu 창을 모두 닫고 PowerShell에서 `wsl --shutdown` 실행 후 다시 열어 `code .` 실행 → VS Code Server 설치 후 정상 연결
 - **주의:** 안내 메시지의 `sudo snap install code`는 리눅스용 VSCode를 별도 설치하는 것이라 사용하지 않음
-- 📷 [command not found](images/ts-02-code-not-found.png) · [재실행 후 성공](images/ts-02-code-fixed.png)
+
 
 ### 3) VSCode GitHub 로그인 후 "Another instance of Code is already running as administrator"
 - **문제:** 브라우저에서 GitHub 인증 후 VSCode로 돌아올 때 위 에러 발생
 - **원인 가설:** 설치 직후 자동 실행된 VSCode가 관리자 권한으로 떠 있어(창 제목 `[Administrator]`), 일반 권한으로 열리려는 인스턴스와 충돌
 - **해결:** VSCode 창을 모두 닫고 다시 실행한 뒤 로그인 재시도 → `gx2un (GitHub)` 로그인 확인
-- 📷 [관리자 인스턴스 충돌](images/ts-03-vscode-admin.png)
+
 
 ### 4) `docker build` 실패 (`unknown shorthand flag`, `requires 1 argument`)
 - **문제:** 커스텀 이미지 빌드 시 연속으로 에러 발생
@@ -554,7 +553,6 @@ curl http://localhost:8080
   - `docker built ...` → `build` 오타로 존재하지 않는 명령
   - `docker build -t my-web:1.0.` → 마지막 `.`가 태그에 붙어 **빌드 컨텍스트(PATH)가 누락**됨. 에러의 `requires 1 argument`가 PATH 누락을 의미
 - **해결:** 태그와 경로를 띄어 써서 `docker build -t my-web:1.0 .` 로 실행해 빌드 성공
-- 📷 [build 오타](images/ts-04-build-typo.png) · [PATH 누락](images/ts-04-build-path.png)
 
 ### 5) 프롬프트가 `>`로 바뀌고 입력 대기 상태가 됨
 - **문제:** heredoc(`<<'EOF'`)을 중복 입력하거나, 문자열의 닫는 따옴표를 빠뜨렸을 때 프롬프트가 `>`로 바뀌고 명령이 끝나지 않음
@@ -569,13 +567,12 @@ curl http://localhost:8080
   2. `git config --global user.email`을 noreply 주소로 변경
   3. `git commit --amend --reset-author --no-edit`로 커밋 작성자 정보 수정
   4. `git push --force`로 원격 기록을 덮어씀 (개인 저장소이므로 강제 push 사용)
-- 📷 [작성자 수정 확인](images/ts-06-amend.png) · [강제 push](images/ts-06-force-push.png)
+
 
 ### 7) 일반 Ubuntu 터미널에서 `git push` 시 인증 실패
 - **문제:** `Password authentication is not supported for Git operations` 에러와 함께 push 실패
 - **원인:** GitHub는 HTTPS push 시 계정 비밀번호 인증을 지원하지 않음 (토큰 또는 SSH 필요)
 - **해결:** GitHub 로그인이 연동된 **VSCode 통합 터미널**에서 push하여 VSCode가 인증을 대신 처리하도록 함
-- 📷 [비밀번호 인증 실패](images/ts-07-push-auth-fail.png)
 - **참고:** VSCode 터미널에서 Backspace가 한 칸씩 밀려 보이는 표시 오류가 있어, 영어 입력 모드로 전환하고 명령을 붙여넣어 해결함
 
 ---

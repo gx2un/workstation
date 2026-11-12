@@ -547,29 +547,13 @@ curl http://localhost:8080
 - **해결:** VSCode 창을 모두 닫고 다시 실행한 뒤 로그인 재시도 → `gx2un (GitHub)` 로그인 확인
 
 
-### 4) `docker build` 실패 (`unknown shorthand flag`, `requires 1 argument`)
-- **문제:** 커스텀 이미지 빌드 시 연속으로 에러 발생
-- **원인 및 확인:**
-  - `docker built ...` → `build` 오타로 존재하지 않는 명령
-  - `docker build -t my-web:1.0.` → 마지막 `.`가 태그에 붙어 **빌드 컨텍스트(PATH)가 누락**됨. 에러의 `requires 1 argument`가 PATH 누락을 의미
-- **해결:** 태그와 경로를 띄어 써서 `docker build -t my-web:1.0 .` 로 실행해 빌드 성공
-
-### 5) 프롬프트가 `>`로 바뀌고 입력 대기 상태가 됨
+### 4) 프롬프트가 `>`로 바뀌고 입력 대기 상태가 됨
 - **문제:** heredoc(`<<'EOF'`)을 중복 입력하거나, 문자열의 닫는 따옴표를 빠뜨렸을 때 프롬프트가 `>`로 바뀌고 명령이 끝나지 않음
 - **원인:** 쉘이 명령의 끝(`EOF` 또는 닫는 `"`)을 기다리는 상태
 - **해결:** `Ctrl + C`로 입력을 취소하고 명령을 올바르게 다시 입력
 
-### 6) 커밋 기록에 개인 이메일 노출
-- **문제:** 개인 이메일로 설정한 상태에서 첫 커밋을 만들어 GitHub에 push함 → 커밋 메타데이터에 개인 이메일이 공개됨
-- **원인:** GitHub 이메일 비공개 설정 전에 `git config user.email`을 개인 메일로 설정함
-- **해결:**
-  1. GitHub Settings → Emails에서 "Keep my email addresses private" 활성화 후 noreply 주소 확인
-  2. `git config --global user.email`을 noreply 주소로 변경
-  3. `git commit --amend --reset-author --no-edit`로 커밋 작성자 정보 수정
-  4. `git push --force`로 원격 기록을 덮어씀 (개인 저장소이므로 강제 push 사용)
 
-
-### 7) 일반 Ubuntu 터미널에서 `git push` 시 인증 실패
+### 5) 일반 Ubuntu 터미널에서 `git push` 시 인증 실패
 - **문제:** `Password authentication is not supported for Git operations` 에러와 함께 push 실패
 - **원인:** GitHub는 HTTPS push 시 계정 비밀번호 인증을 지원하지 않음 (토큰 또는 SSH 필요)
 - **해결:** GitHub 로그인이 연동된 **VSCode 통합 터미널**에서 push하여 VSCode가 인증을 대신 처리하도록 함

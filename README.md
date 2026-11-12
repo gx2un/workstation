@@ -1,7 +1,6 @@
 # Codyssey Workstation
 
-> 터미널 · Docker · Git/GitHub로 “누구나 같은 방식으로 실행할 수 있는” 개발 워크스테이션을 직접 구축하고, 그 과정을 로그와 스크린샷으로 검증한 기록입니다.
-> 
+> 터미널 · Docker · Git/GitHub로 "누구나 같은 방식으로 실행할 수 있는" 개발 워크스테이션을 직접 구축하고, 그 과정을 로그와 스크린샷으로 검증한 기록입니다.
 
 ---
 
@@ -10,7 +9,7 @@
 - 리눅스 CLI로 작업 디렉토리를 구성하고 파일 권한을 실습한다.
 - Docker를 설치·점검하고 컨테이너를 실행·관리한다.
 - `nginx:alpine` 기반 Dockerfile로 커스텀 웹 서버 이미지를 만들고 포트 매핑으로 접속을 확인한다.
-- 바인드 마운트로 “변경 반영”, Docker 볼륨으로 “데이터 영속성”을 검증한다.
+- 바인드 마운트로 "변경 반영", Docker 볼륨으로 "데이터 영속성"을 검증한다.
 - Git을 설정하고 VSCode에서 GitHub와 연동해 저장소를 올린다.
 
 ---
@@ -18,7 +17,7 @@
 ## 2. 실행 환경
 
 | 항목 | 내용 |
-| --- | --- |
+|---|---|
 | OS | Windows 11 + WSL2 (Ubuntu) |
 | Shell | bash |
 | Terminal | Ubuntu 터미널 (WSL), VSCode 통합 터미널 |
@@ -27,7 +26,6 @@
 | Editor | Visual Studio Code + WSL 확장 |
 
 > ⚠️ **환경 관련 주의사항**
-> 
 > - 본 과제는 Windows + WSL2 환경에서 수행했다. 모든 작업은 Windows 드라이브(`/mnt/c/...`)가 아닌 **리눅스 홈(`~`) 아래**에서 진행했다. Windows 드라이브에서는 `chmod`가 정상 반영되지 않기 때문이다.
 > - macOS(서울캠퍼스) 환경이라면 Docker Desktop 대신 **OrbStack**을 실행한 뒤 동일한 `docker` 명령을 사용하면 된다.
 > - 사용자 이름(`eun`)이 들어간 경로는 각자의 홈 경로로 바꿔 읽으면 된다.
@@ -36,17 +34,17 @@
 
 ## 3. 수행 체크리스트
 
-- [x]  터미널 기본 조작 (위치 확인, 목록, 이동, 생성, 복사, 이동/이름변경, 삭제, 내용 확인, 빈 파일)
-- [x]  권한 변경 실습 (파일 1개, 디렉토리 1개)
-- [x]  Docker 설치 및 점검 (`docker --version`, `docker info`)
-- [x]  Docker 기본 운영 명령 (`images`, `ps`, `logs`, `stats`, `stop`)
-- [x]  hello-world 실행
-- [x]  ubuntu 컨테이너 진입 및 attach / exec 비교
-- [x]  Dockerfile 기반 커스텀 이미지 빌드·실행
-- [x]  포트 매핑 접속 (8080, 8081 / curl + 브라우저)
-- [x]  바인드 마운트 변경 반영
-- [x]  Docker 볼륨 영속성
-- [x]  Git 설정 + VSCode GitHub 연동
+- [x] 터미널 기본 조작 (위치 확인, 목록, 이동, 생성, 복사, 이동/이름변경, 삭제, 내용 확인, 빈 파일)
+- [x] 권한 변경 실습 (파일 1개, 디렉토리 1개)
+- [x] Docker 설치 및 점검 (`docker --version`, `docker info`)
+- [x] Docker 기본 운영 명령 (`images`, `ps`, `logs`, `stats`, `stop`)
+- [x] hello-world 실행
+- [x] ubuntu 컨테이너 진입 및 attach / exec 비교
+- [x] Dockerfile 기반 커스텀 이미지 빌드·실행
+- [x] 포트 매핑 접속 (8080, 8081 / curl + 브라우저)
+- [x] 바인드 마운트 변경 반영
+- [x] Docker 볼륨 영속성
+- [x] Git 설정 + VSCode GitHub 연동
 
 ---
 
@@ -73,7 +71,6 @@ workstation/
 ### 5-1. 터미널 기본 조작
 
 **현재 위치 확인 → 홈으로 이동 → 숨김 파일 포함 목록 확인**
-
 ```bash
 $ pwd
 /mnt/c/WINDOWS/system32
@@ -93,7 +90,6 @@ drwxr-xr-x 3 eun  eun  4096 Nov  9 14:00 .config
 ```
 
 **작업 디렉토리 생성 및 이동**
-
 ```bash
 $ mkdir -p ~/codyssey/workstation
 $ cd ~/codyssey/workstation
@@ -102,7 +98,6 @@ $ pwd
 ```
 
 **빈 파일 생성 / 파일 작성 및 내용 확인**
-
 ```bash
 $ touch empty.txt
 $ echo "hello codyssey" > hello.txt
@@ -111,7 +106,6 @@ hello codyssey
 ```
 
 **디렉토리 생성 및 복사**
-
 ```bash
 $ mkdir practice
 $ cp hello.txt practice/
@@ -123,7 +117,6 @@ drwxr-xr-x 3 eun eun 4096 Nov  9 14:05 ..
 ```
 
 **이름 변경 → 다른 폴더로 이동**
-
 ```bash
 $ mv hello.txt greeting.txt
 $ ls -la
@@ -138,7 +131,6 @@ $ ls -la practice
 ```
 
 **삭제**
-
 ```bash
 $ rm practice/hello.txt
 $ ls -la practice
@@ -146,7 +138,6 @@ $ ls -la practice
 ```
 
 **상대 경로로 이동했다가 상위 폴더로 복귀**
-
 ```bash
 $ cd practice
 $ pwd
@@ -156,14 +147,13 @@ $ pwd
 /home/eun/codyssey/workstation
 ```
 
-📷 증거: 작업 폴더 준비 · 터미널 조작 1 · 터미널 조작 2
+📷 증거: [작업 폴더 준비](images/00-terminal-setup.png) · [터미널 조작 1](images/01-terminal-basic-1.png) · [터미널 조작 2](images/02-terminal-basic-2.png)
 
 ---
 
 ### 5-2. 권한 실습
 
 **파일: 644 → 755**
-
 ```bash
 $ ls -l empty.txt
 -rw-r--r-- 1 eun eun 0 Nov 11 10:28 empty.txt
@@ -173,7 +163,6 @@ $ ls -l empty.txt
 ```
 
 **디렉토리: 755 → 700**
-
 ```bash
 $ ls -ld practice
 drwxr-xr-x 2 eun eun 4096 Nov  9 14:07 practice
@@ -183,11 +172,11 @@ drwx------ 2 eun eun 4096 Nov  9 14:07 practice
 ```
 
 | 대상 | 변경 전 | 변경 후 | 의미 |
-| --- | --- | --- | --- |
+|---|---|---|---|
 | `empty.txt` | `rw-r--r--` (644) | `rwxr-xr-x` (755) | 모든 사용자에게 실행 권한 추가 |
 | `practice/` | `rwxr-xr-x` (755) | `rwx------` (700) | 소유자만 읽기·쓰기·진입 가능 |
 
-📷 증거: 파일 권한 · 디렉토리 권한
+📷 증거: [파일 권한](images/03-chmod-file.png) · [디렉토리 권한](images/04-chmod-dir.png)
 
 ---
 
@@ -203,7 +192,7 @@ Client:
  Context:    default
  ...
 Server:
-  Containers: 7
+ Containers: 7
   Running: 4
   Paused: 0
   Stopped: 3
@@ -213,18 +202,17 @@ Server:
   driver-type: io.containerd.snapshotter.v1
  Logging Driver: local
  Cgroup Driver: cgroupfs
+ ...
 ```
-
 - `Server:` 섹션이 출력되면 Docker 데몬이 정상 동작 중임을 의미한다.
 
-📷 증거: docker version · docker info Server
+📷 증거: [docker version](images/05-docker-info-1.png) · [docker info Server](images/05-docker-info-2.png)
 
 ---
 
 ### 5-4. 컨테이너 실행 실습
 
 **hello-world**
-
 ```bash
 $ docker run hello-world
 Unable to find image 'hello-world:latest' locally
@@ -237,7 +225,6 @@ This message shows that your installation appears to be working correctly.
 ```
 
 **이미지 / 컨테이너 목록**
-
 ```bash
 $ docker images
 IMAGE                ID             DISK USAGE   CONTENT SIZE
@@ -249,7 +236,6 @@ CONTAINER ID   IMAGE         COMMAND    CREATED          STATUS                 
 ```
 
 **ubuntu 컨테이너 진입 후 명령 실행**
-
 ```bash
 $ docker run -it --name my-ubuntu ubuntu bash
 root@0bf5bb0325b8:/# ls
@@ -259,7 +245,7 @@ hello from container
 root@0bf5bb0325b8:/# exit
 ```
 
-📷 증거: hello-world · images / ps -a · ubuntu 컨테이너
+📷 증거: [hello-world](images/06-hello-world.png) · [images / ps -a](images/06-images-ps.png) · [ubuntu 컨테이너](images/07-ubuntu-container.png)
 
 ---
 
@@ -287,12 +273,11 @@ CONTAINER ID   IMAGE    COMMAND   STATUS                    NAMES
 ```
 
 **관찰 결과**
-
 - `exec`는 실행 중인 컨테이너에 **새 프로세스를 추가로** 띄워 접속한다. 그 프로세스를 exit해도 메인 프로세스는 살아 있으므로 컨테이너가 유지된다.
 - `attach`는 컨테이너의 **메인 프로세스(bash)에 직접** 연결한다. exit하면 메인 프로세스가 끝나므로 컨테이너도 종료된다.
 - attach 상태에서 컨테이너를 끄지 않고 빠져나오려면 `Ctrl+P`, `Ctrl+Q`를 사용한다.
 
-📷 증거: attach vs exec
+📷 증거: [attach vs exec](images/08-attach-exec.png)
 
 ---
 
@@ -311,7 +296,6 @@ $ docker logs test-nginx
 ...
 2026/11/12 04:56:28 [notice] 1#1: signal 3 (SIGQUIT) received, shutting down
 ...
-- 로그에는 nginx 시작 과정과, 'docker stop' 시 SIGQUIT 신호를 받고 종료된 기록이 남아 있다. (로그 시간은 컨테이너 기준 UTC)
 
 $ docker stats --no-stream
 CONTAINER ID   NAME         CPU %   MEM USAGE / LIMIT     MEM %   NET I/O          BLOCK I/O     PIDS
@@ -324,7 +308,9 @@ CONTAINER ID   IMAGE   COMMAND                  STATUS                    NAMES
 d37c5f8fbbb17  nginx   "/docker-entrypoint.…"   Exited (0) 5 seconds ago  test-nginx
 ```
 
-📷 증거: logs · stats / stop
+- 로그에는 nginx 시작 과정과, `docker stop` 시 SIGQUIT 신호를 받고 종료된 기록이 남아 있다. (로그 시간은 컨테이너 기준 UTC)
+
+📷 증거: [logs](images/09-docker-logs.png) · [stats / stop](images/10-docker-stats-stop.png)
 
 ---
 
@@ -334,8 +320,7 @@ d37c5f8fbbb17  nginx   "/docker-entrypoint.…"   Exited (0) 5 seconds ago  test
 **선택한 베이스:** `nginx:alpine` (공식 NGINX 이미지의 경량 Alpine 버전)
 
 `my-web/Dockerfile`
-
-```docker
+```dockerfile
 FROM nginx:alpine
 LABEL org.opencontainers.image.title="eun-custom-web"
 ENV APP_ENV=dev
@@ -343,14 +328,13 @@ COPY site/ /usr/share/nginx/html/
 ```
 
 | 커스텀 포인트 | 목적 |
-| --- | --- |
+|---|---|
 | `FROM nginx:alpine` | 검증된 웹 서버를 바탕으로 시작해 직접 설치할 필요를 없애고, 가벼운 이미지를 사용 |
 | `LABEL ...title` | 이미지에 이름 메타데이터를 붙여 식별·관리를 쉽게 함 |
 | `ENV APP_ENV=dev` | 실행 환경을 환경변수로 표시 (설정과 코드 분리) |
 | `COPY site/ ...` | NGINX 기본 페이지를 직접 작성한 정적 페이지로 교체 |
 
 **빌드**
-
 ```bash
 $ cd ~/codyssey/workstation/my-web
 $ docker build -t my-web:1.0 .
@@ -364,7 +348,7 @@ IMAGE                ID             DISK USAGE   CONTENT SIZE
 my-web:1.0           01a8b778bae7   93.7MB       26.4MB
 ```
 
-📷 증거: docker build
+📷 증거: [docker build](images/11-docker-build.png)
 
 ---
 
@@ -384,18 +368,13 @@ CONTAINER ID   IMAGE        STATUS         PORTS                                
 0d3caf3cd8a5   my-web:1.0   Up 11 seconds  0.0.0.0:8081->80/tcp, [::]:8081->80/tcp   my-web-8081
 bfa3ac239a14   my-web:1.0   Up 2 minutes   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   my-web-8080
 ```
-
 - 같은 이미지로 컨테이너 2개를 띄워도 동일하게 동작한다. 컨테이너 내부 포트는 둘 다 80이지만, 호스트 포트(8080/8081)가 달라 충돌하지 않는다.
 
 **브라우저 접속 (주소창 포함)**
 
-브라우저 접속
+![브라우저 접속](images/12-browser-8080.png)
 
-!브라우저 접속
-
-브라우저 접속
-
-📷 증거: 8080 실행 + curl · 8081 실행 + docker ps
+📷 증거: [8080 실행 + curl](images/13-port-mapping-8080.png) · [8081 실행 + docker ps](images/13-port-mapping-8081.png)
 
 ---
 
@@ -422,14 +401,13 @@ $ curl http://localhost:8080
 ```
 
 | 컨테이너 | 방식 | 호스트 파일 수정 후 |
-| --- | --- | --- |
+|---|---|---|
 | `my-web-bind` (8082) | 바인드 마운트 | 즉시 반영됨 |
 | `my-web-8080` (8080) | 이미지에 COPY | 변경 없음 |
 
 > 참고: 이 실습으로 `my-web/site/index.html` 내용이 바인드 마운트 테스트 문구로 바뀌었으므로, 지금 다시 빌드하면 바뀐 문구가 이미지에 들어간다.
-> 
 
-📷 증거: 바인드 마운트
+📷 증거: [바인드 마운트](images/14-bind-mount.png)
 
 ---
 
@@ -458,10 +436,9 @@ $ docker run -d --name vol-test2 -v eun-data:/data ubuntu sleep infinity
 $ docker exec vol-test2 cat /data/hello.txt
 data saved by eun
 ```
-
 - `vol-test1`을 삭제한 뒤에도 새 컨테이너 `vol-test2`에서 같은 데이터가 확인되어, 볼륨 데이터가 컨테이너 수명과 무관하게 유지됨을 확인했다.
 
-📷 증거: 볼륨 영속성
+📷 증거: [볼륨 영속성](images/15-volume.png)
 
 ---
 
@@ -488,11 +465,9 @@ remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
 branch.main.remote=origin
 branch.main.merge=refs/heads/main
 ```
-
 - 이메일은 개인 메일 노출을 막기 위해 GitHub에서 제공하는 **noreply 주소**를 사용했다.
 
 **첫 커밋 및 업로드**
-
 ```bash
 $ git init
 $ git add .
@@ -502,10 +477,8 @@ $ git commit -m "Initial commit: terminal, docker practice files"
 $ git log --oneline
 e65c675 (HEAD -> main) Initial commit: terminal, docker practice files
 ```
-
 - 이후 VSCode Source Control의 **Publish Branch**로 GitHub public 저장소(`gx2un/workstation`)에 업로드했다.
 - 첫 커밋에 개인 이메일이 기록되어 있어 작성자 정보를 수정했다. (트러블슈팅 6 참고)
-
 ```bash
 $ git commit --amend --reset-author --no-edit
 $ git log --format="%h %an %ae"
@@ -515,14 +488,14 @@ To https://github.com/gx2un/workstation.git
  + e65c675...e610709 main -> main (forced update)
 ```
 
-📷 증거: git config · VSCode GitHub 로그인 · VSCode WSL 연결
+📷 증거: [git config](images/16-git-config.png) · [VSCode GitHub 로그인](images/17-vscode-github-login.png) · [VSCode WSL 연결](images/18-vscode-wsl.png)
 
 ---
 
 ## 6. 검증 방법 요약
 
 | 항목 | 검증 명령 | 확인 내용 |
-| --- | --- | --- |
+|---|---|---|
 | 작업 위치 | `pwd` | 현재 절대 경로 |
 | 권한 | `ls -l`, `ls -ld` | 변경 전/후 권한 문자열 |
 | Docker 설치 | `docker --version` | 버전 출력 |
@@ -545,8 +518,7 @@ docker build -t my-web:1.0 .
 docker run -d -p 8080:80 --name my-web-8080 my-web:1.0
 curl http://localhost:8080
 ```
-
-- 8080 포트가 이미 사용 중이면 `p 8090:80`처럼 다른 호스트 포트를 사용한다.
+- 8080 포트가 이미 사용 중이면 `-p 8090:80`처럼 다른 호스트 포트를 사용한다.
 - 바인드 마운트의 `$(pwd)`는 명령을 실행하는 위치 기준이므로 반드시 `my-web/` 폴더 안에서 실행한다.
 
 ---
@@ -554,67 +526,58 @@ curl http://localhost:8080
 ## 8. 트러블슈팅
 
 ### 1) `wsl --install` 실행 시 403 에러
-
 - **문제:** 관리자 PowerShell에서 `wsl --install` 실행 시 `(403)` 에러가 발생하며 설치 실패
 - **원인 가설:** ① 관리자 권한 부족 ② 설치 파일 다운로드 경로 차단
-- **확인:** PowerShell 창 제목에 “관리자”가 표시되어 있어 ①은 아님. 403은 HTTP “접근 거부” 코드이므로 다운로드 단계 문제로 판단
+- **확인:** PowerShell 창 제목에 "관리자"가 표시되어 있어 ①은 아님. 403은 HTTP "접근 거부" 코드이므로 다운로드 단계 문제로 판단
 - **해결:** Microsoft Store를 거치지 않고 직접 내려받는 옵션으로 재시도하여 성공
-    
-    ```powershell
-    wsl --install --web-download
-    wsl --install -d Ubuntu --web-download
-    ```
-    
-- 📷 403 에러 · web-download 성공
+  ```powershell
+  wsl --install --web-download
+  wsl --install -d Ubuntu --web-download
+  ```
+- 📷 [403 에러](images/ts-01-wsl-403.png) · [web-download 성공](images/ts-01-wsl-fixed.png)
 
 ### 2) Ubuntu에서 `code .` 실행 시 `command not found`
-
 - **문제:** VSCode 설치 후 Ubuntu에서 `code .` 입력 시 `Command 'code' not found` 출력
 - **원인 가설:** Ubuntu 터미널을 VSCode 설치 **전에** 열어 두어, 새로 추가된 PATH가 반영되지 않음
 - **확인:** VSCode 설치 시 PATH 추가 옵션은 기본 체크 상태였음
 - **해결:** Ubuntu 창을 모두 닫고 PowerShell에서 `wsl --shutdown` 실행 후 다시 열어 `code .` 실행 → VS Code Server 설치 후 정상 연결
 - **주의:** 안내 메시지의 `sudo snap install code`는 리눅스용 VSCode를 별도 설치하는 것이라 사용하지 않음
-- 📷 command not found · 재실행 후 성공
+- 📷 [command not found](images/ts-02-code-not-found.png) · [재실행 후 성공](images/ts-02-code-fixed.png)
 
-### 3) VSCode GitHub 로그인 후 “Another instance of Code is already running as administrator”
-
+### 3) VSCode GitHub 로그인 후 "Another instance of Code is already running as administrator"
 - **문제:** 브라우저에서 GitHub 인증 후 VSCode로 돌아올 때 위 에러 발생
 - **원인 가설:** 설치 직후 자동 실행된 VSCode가 관리자 권한으로 떠 있어(창 제목 `[Administrator]`), 일반 권한으로 열리려는 인스턴스와 충돌
 - **해결:** VSCode 창을 모두 닫고 다시 실행한 뒤 로그인 재시도 → `gx2un (GitHub)` 로그인 확인
-- 📷 관리자 인스턴스 충돌
+- 📷 [관리자 인스턴스 충돌](images/ts-03-vscode-admin.png)
 
 ### 4) `docker build` 실패 (`unknown shorthand flag`, `requires 1 argument`)
-
 - **문제:** 커스텀 이미지 빌드 시 연속으로 에러 발생
 - **원인 및 확인:**
-    - `docker built ...` → `build` 오타로 존재하지 않는 명령
-    - `docker build -t my-web:1.0.` → 마지막 `.`가 태그에 붙어 **빌드 컨텍스트(PATH)가 누락**됨. 에러의 `requires 1 argument`가 PATH 누락을 의미
+  - `docker built ...` → `build` 오타로 존재하지 않는 명령
+  - `docker build -t my-web:1.0.` → 마지막 `.`가 태그에 붙어 **빌드 컨텍스트(PATH)가 누락**됨. 에러의 `requires 1 argument`가 PATH 누락을 의미
 - **해결:** 태그와 경로를 띄어 써서 `docker build -t my-web:1.0 .` 로 실행해 빌드 성공
-- 📷 build 오타 · PATH 누락
+- 📷 [build 오타](images/ts-04-build-typo.png) · [PATH 누락](images/ts-04-build-path.png)
 
 ### 5) 프롬프트가 `>`로 바뀌고 입력 대기 상태가 됨
-
 - **문제:** heredoc(`<<'EOF'`)을 중복 입력하거나, 문자열의 닫는 따옴표를 빠뜨렸을 때 프롬프트가 `>`로 바뀌고 명령이 끝나지 않음
 - **원인:** 쉘이 명령의 끝(`EOF` 또는 닫는 `"`)을 기다리는 상태
 - **해결:** `Ctrl + C`로 입력을 취소하고 명령을 올바르게 다시 입력
 
 ### 6) 커밋 기록에 개인 이메일 노출
-
 - **문제:** 개인 이메일로 설정한 상태에서 첫 커밋을 만들어 GitHub에 push함 → 커밋 메타데이터에 개인 이메일이 공개됨
 - **원인:** GitHub 이메일 비공개 설정 전에 `git config user.email`을 개인 메일로 설정함
 - **해결:**
-    1. GitHub Settings → Emails에서 “Keep my email addresses private” 활성화 후 noreply 주소 확인
-    2. `git config --global user.email`을 noreply 주소로 변경
-    3. `git commit --amend --reset-author --no-edit`로 커밋 작성자 정보 수정
-    4. `git push --force`로 원격 기록을 덮어씀 (개인 저장소이므로 강제 push 사용)
-- 📷 작성자 수정 확인 · 강제 push
+  1. GitHub Settings → Emails에서 "Keep my email addresses private" 활성화 후 noreply 주소 확인
+  2. `git config --global user.email`을 noreply 주소로 변경
+  3. `git commit --amend --reset-author --no-edit`로 커밋 작성자 정보 수정
+  4. `git push --force`로 원격 기록을 덮어씀 (개인 저장소이므로 강제 push 사용)
+- 📷 [작성자 수정 확인](images/ts-06-amend.png) · [강제 push](images/ts-06-force-push.png)
 
 ### 7) 일반 Ubuntu 터미널에서 `git push` 시 인증 실패
-
 - **문제:** `Password authentication is not supported for Git operations` 에러와 함께 push 실패
 - **원인:** GitHub는 HTTPS push 시 계정 비밀번호 인증을 지원하지 않음 (토큰 또는 SSH 필요)
 - **해결:** GitHub 로그인이 연동된 **VSCode 통합 터미널**에서 push하여 VSCode가 인증을 대신 처리하도록 함
-- 📷 비밀번호 인증 실패
+- 📷 [비밀번호 인증 실패](images/ts-07-push-auth-fail.png)
 - **참고:** VSCode 터미널에서 Backspace가 한 칸씩 밀려 보이는 표시 오류가 있어, 영어 입력 모드로 전환하고 명령을 붙여넣어 해결함
 
 ---
@@ -622,37 +585,31 @@ curl http://localhost:8080
 ## 9. 개념 정리
 
 ### 절대 경로 vs 상대 경로
-
 - **절대 경로:** 루트(`/`)부터 전체를 적는 경로. 어디서 실행해도 같은 위치를 가리킨다. 예) `/home/eun/codyssey/workstation/practice`
 - **상대 경로:** 현재 위치 기준 경로. 예) 현재 `workstation`에 있을 때 `practice`, 상위 폴더는 `..`
 
 ### 파일 권한 (r/w/x, 755, 644)
-
 - `r`(읽기)=4, `w`(쓰기)=2, `x`(실행)=1을 더해 숫자로 표현하며, **소유자 / 그룹 / 기타** 순서로 3자리를 쓴다.
 - `755` = `rwx` `r-x` `r-x` → 소유자 전체 권한, 나머지는 읽기·실행
 - `644` = `rw-` `r--` `r--` → 소유자 읽기·쓰기, 나머지는 읽기만
-- 디렉토리에서 `x`는 “폴더 안으로 진입(`cd`)” 권한을 의미한다.
+- 디렉토리에서 `x`는 "폴더 안으로 진입(`cd`)" 권한을 의미한다.
 
 ### 이미지 vs 컨테이너
-
 - **이미지:** 실행에 필요한 파일과 설정을 묶은 읽기 전용 템플릿
 - **컨테이너:** 이미지를 실행한 격리된 인스턴스. 하나의 이미지로 여러 컨테이너를 만들 수 있다.
 
 ### 포트 매핑이 필요한 이유
-
 - 컨테이너는 격리된 네트워크를 가지므로, 컨테이너 내부 포트(80)에 호스트가 바로 접근할 수 없다.
-- `p <호스트포트>:<컨테이너포트>`로 호스트 포트를 컨테이너 포트에 연결해야 외부(브라우저)에서 접속할 수 있다.
+- `-p <호스트포트>:<컨테이너포트>`로 호스트 포트를 컨테이너 포트에 연결해야 외부(브라우저)에서 접속할 수 있다.
 
 ### 바인드 마운트 vs Docker 볼륨
-
-|  | 바인드 마운트 | Docker 볼륨 |
-| --- | --- | --- |
+| | 바인드 마운트 | Docker 볼륨 |
+|---|---|---|
 | 저장 위치 | 사용자가 지정한 호스트 경로 | Docker가 관리하는 저장 공간 |
 | 주 용도 | 개발 중 소스 변경 즉시 반영 | 데이터 영속 보관 (DB 등) |
 | 컨테이너 삭제 시 | 호스트 파일 유지 | 볼륨 데이터 유지 |
 
 ### Git vs GitHub
-
 - **Git:** 로컬에서 파일 변경 이력을 관리하는 **버전 관리 도구**
 - **GitHub:** Git 저장소를 원격에 호스팅하고 공유·협업하는 **플랫폼**
 
